@@ -1,26 +1,27 @@
 import { FaShareAlt, FaRegBookmark, FaStar, FaEye } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const NewsCard = ({ news }) => {
-  const { title, image_url, rating, total_view, author, details } = news;
+  const { _id, title, image_url, rating, total_view, author, details } = news;
 
   return (
     <div>
       <div
         className="transition duration-300 rounded-md 
-          overflow-hidden shadow-lg"
+          shadow-2xl mb-8"
       >
         <div>
           {/* Card Header */}
-          <div className="flex justify-between items-center bg-slate-800 py-4 px-8 border border-gray-700">
+          <div
+            className="flex justify-between items-center bg-slate-800 py-2 px-8 
+          border border-gray-700 rounded-tl-md rounded-br-md"
+          >
             <div className="flex">
-              <img
-                src="https://tailwindcss.com/img/jonathan.jpg"
-                className="rounded-full h-12 w-12 mb-2"
-              />
+              <img src={author.img} className="rounded-full h-12 w-12 mb-2" />
               <div className="ml-3">
                 {" "}
-                <h2 className="text-sm">Jonathon</h2>
-                <span className="text-sm">2022-20-02</span>
+                <h2 className="text-sm">{author.name}</h2>
+                <span className="text-sm">{author.published_date}</span>
               </div>
             </div>
 
@@ -29,21 +30,34 @@ const NewsCard = ({ news }) => {
               <FaRegBookmark className="ml-4" size={20} />
             </div>
           </div>
-          <h4 className="text-lg mt-3 font-semibold py-4 px-8">{title}</h4>
+
+          <h4 className="text-lg mt-1 font-semibold py-3 px-8">{title}</h4>
           <img src={image_url} className="w-full rounded-md px-8" />
-          <p className="text-sm text-gray-400 text-justify py-3 px-8">
-            {details}
-          </p>
+          {details.length > 200 ? (
+            <p className="text-sm text-gray-400 text-justify py-3 px-8">
+              {details.slice(0, 200)}{" "}
+              <Link
+                to={`/news/${_id}`}
+                className="text-blue-600 underline font-bold text-lg"
+              >
+                Read More...
+              </Link>
+            </p>
+          ) : (
+            <p className="text-sm text-gray-400 text-justify py-3 px-8">
+              {details}
+            </p>
+          )}
 
           {/* Card Footer */}
-          <div className="flex justify-between items-center bg-slate-800 py-6 px-8 border border-gray-700 mt-5">
+          <div className="flex justify-between items-center bg-slate-800 py-4 px-8 border border-gray-700 mt-2 rounded-tr-md rounded-bl-md">
             <div className="flex">
               <FaStar size={25} color="orange" />
-              <span className="ml-2">4.5</span>
+              <span className="ml-2">{rating.number}</span>
             </div>
             <div className="flex">
               <FaEye size={20} />
-              <span className="ml-4">488</span>
+              <span className="ml-4">{total_view}</span>
             </div>
           </div>
         </div>

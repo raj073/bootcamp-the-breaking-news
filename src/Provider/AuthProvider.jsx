@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
 import {
@@ -5,6 +6,8 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
   signOut,
 } from "firebase/auth";
 import app from "../Firebase/firebase.init";
@@ -27,6 +30,21 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  const googleSignIn = (provider) => {
+    setLoading(true);
+    return signInWithPopup(auth, provider);
+  };
+
+  const githubSignIn = (provider) => {
+    setLoading(true);
+    return signInWithPopup(auth, provider);
+  };
+
+  const updateUserProfile = (profile) => {
+    setLoading(true);
+    return updateProfile(auth.currentUser, profile);
+  };
+
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
@@ -45,8 +63,12 @@ const AuthProvider = ({ children }) => {
   }, []);
   const authInfo = {
     user,
+    loading,
     createUser,
     signIn,
+    googleSignIn,
+    githubSignIn,
+    updateUserProfile,
     logOut,
   };
   return (

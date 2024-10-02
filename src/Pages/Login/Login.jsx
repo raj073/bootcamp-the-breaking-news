@@ -1,12 +1,18 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import toast from "react-hot-toast";
+import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 
 const Login = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, googleSignIn, githubSignIn } = useContext(AuthContext);
+
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("Location in the login page", location);
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -24,7 +30,35 @@ const Login = () => {
         toast.success("User Login Successful", {
           position: "top-right",
         });
-        navigate("/");
+        navigate(location?.state ? location.state : "/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleGoogleSignin = () => {
+    googleSignIn(googleProvider)
+      .then((result) => {
+        console.log(result.user);
+        toast.success("User Google Login Successful", {
+          position: "top-right",
+        });
+        navigate(location?.state ? location.state : "/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleGitHubSignin = () => {
+    githubSignIn(githubProvider)
+      .then((result) => {
+        console.log(result.user);
+        toast.success("User GitHub Login Successful", {
+          position: "top-right",
+        });
+        navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
         console.log(error);
@@ -33,7 +67,7 @@ const Login = () => {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="py-20">
+      <div className="py-8">
         <div className="flex h-full items-center justify-center">
           <div className="rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900 flex-col flex h-full items-center justify-center sm:px-4">
             <div className="flex h-full flex-col justify-center gap-4 p-6">
@@ -51,13 +85,13 @@ const Login = () => {
                         className="text-sm font-medium text-gray-900 dark:text-gray-300"
                         htmlFor="email"
                       >
-                        Email:
+                        Email
                       </label>
                     </div>
                     <div className="flex w-full rounded-lg pt-1">
                       <div className="relative w-full">
                         <input
-                          className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
+                          className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="email"
                           type="email"
                           name="email"
@@ -81,7 +115,9 @@ const Login = () => {
                     <div className="flex w-full rounded-lg pt-1">
                       <div className="relative w-full">
                         <input
-                          className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
+                          className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300
+                           text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700
+                            dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="password"
                           type="password"
                           name="password"
@@ -96,20 +132,30 @@ const Login = () => {
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <button type="submit" className="btn btn-outline btn-info">
+                    <button
+                      type="submit"
+                      className="btn btn-outline btn-info rounded-none"
+                    >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Login
                       </span>
                     </button>
+
                     <button
+                      onClick={handleGoogleSignin}
                       type="button"
-                      className="btn btn-outline btn-error mt-2"
+                      className="btn btn-outline btn-error mt-2 rounded-none"
                     >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Sign in with Google
                       </span>
                     </button>
-                    <button type="button" className="btn btn-outline mt-2">
+
+                    <button
+                      onClick={handleGitHubSignin}
+                      type="button"
+                      className="btn btn-outline mt-2 rounded-none"
+                    >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Sign in with GitHub
                       </span>

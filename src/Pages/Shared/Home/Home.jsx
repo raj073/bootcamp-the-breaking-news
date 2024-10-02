@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import LeftSidebar from "../LeftSidebar/LeftSidebar";
 import Navbar from "../Navbar/Navbar";
 import NewsCard from "../../NewsCard";
+import RightSideNav from "../RightSideNav/RightSideNav";
 
 const Home = () => {
   const news = useLoaderData();
@@ -18,12 +19,14 @@ const Home = () => {
         <div>
           <LeftSidebar></LeftSidebar>
         </div>
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 mt-6">
           {news.map((singleNews) => (
             <NewsCard key={singleNews._id} news={singleNews}></NewsCard>
           ))}
         </div>
-        <div>Right Sidebar</div>
+        <div>
+          <RightSideNav></RightSideNav>
+        </div>
       </div>
     </div>
   );
